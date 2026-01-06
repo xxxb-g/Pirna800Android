@@ -49,7 +49,7 @@ jobs:
           printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > /home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks
       - name: Verify Keystore File
         run: |
-          if [ -s "keystore.jks" ]; then
+          if [ -s "/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks" ]; then
             echo "Keystore file exists and is non-empty."
           else
             echo "Keystore file is missing or empty!" && exit 1
