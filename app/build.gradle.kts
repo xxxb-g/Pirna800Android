@@ -4,31 +4,19 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-
 android {
     namespace = "xxxb.xxxb.pirna800"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "xxxb.xxxb.pirna800"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 3
         versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    signingConfigs {
-        release {
-            val storeFile = file("/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks")
-            val storePassword = System.getenv("STORE_PASSWORD") ?: "defaultStorePassword"
-            val keyAlias = System.getenv("KEY_ALIAS") ?: "defaultKeyAlias"
-            val keyPassword = System.getenv("KEY_PASSWORD") ?: "defaultKeyPassword"D")
-            }
-        }
 
     buildTypes {
         release {
@@ -37,24 +25,33 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
-
+            // Verwende die Secrets direkt aus den Umgebungsvariablen
+            signingConfig = signingConfigs.create("release") {
+                storeFile = file("keystore.jks")
+                storePassword = System.getenv("STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+        
+        debug {
+            isMinifyEnabled = false
         }
     }
-    
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    
     kotlinOptions {
         jvmTarget = "11"
     }
+    
     buildFeatures {
         compose = true
     }
 }
-
 
 dependencies {
     implementation(libs.androidx.core.ktx)
