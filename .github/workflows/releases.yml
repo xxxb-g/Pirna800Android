@@ -46,8 +46,7 @@ jobs:
 
       - name: Setup Keystore
         run: |
-          printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > keystore.jks
-
+          printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > /home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks
       - name: Verify Keystore File
         run: |
           if [ -s "keystore.jks" ]; then
