@@ -23,10 +23,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile = file("/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks")
-            storePassword = System.getenv("STORE_PASSWORD")  // <-- Korrekt
-            keyAlias = System.getenv("KEY_ALIAS")            // <-- Korrekt
-            keyPassword = System.getenv("KEY_PASSWORD")      // <-- Korrekt
+            val storeFile = file("/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks")
+            val storePassword = System.getenv("STORE_PASSWORD") ?: "defaultStorePassword"
+            val keyAlias = System.getenv("KEY_ALIAS") ?: "defaultKeyAlias"
+            val keyPassword = System.getenv("KEY_PASSWORD") ?: "defaultKeyPassword"D")
             }
         }
 
