@@ -21,14 +21,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            val storeFile = file("/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks")
-            val storePassword = System.getenv("STORE_PASSWORD") ?: "defaultStorePassword"
-            val keyAlias = System.getenv("KEY_ALIAS") ?: "defaultKeyAlias"
-            val keyPassword = System.getenv("KEY_PASSWORD") ?: "defaultKeyPassword"D")
-            }
-        }
+signingConfigs {
+    release {
+        val storeFile = file("/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks")
+        val storePassword = System.getenv("STORE_PASSWORD") ?: "defaultStorePassword"
+        val keyAlias = System.getenv("KEY_ALIAS") ?: "defaultKeyAlias"
+        val keyPassword = System.getenv("KEY_PASSWORD") ?: "defaultKeyPassword"
+
+        this.storeFile = storeFile
+        this.storePassword = storePassword
+        this.keyAlias = keyAlias
+        this.keyPassword = keyPassword
+    }
+}
 
     buildTypes {
         release {
