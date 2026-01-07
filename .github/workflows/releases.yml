@@ -96,15 +96,6 @@ jobs:
             echo "Found ${#files[@]} APK(s): ${files[*]}"
           fi
 
-      - name: Authenticate gh CLI
-        if: steps.check_apk.outputs.found_apk == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Authentifiziere gh mit dem Token aus den Secrets
-          echo "${GITHUB_TOKEN}" | gh auth login --with-token
-          gh auth status
-
       - name: Create release and upload APKs
         if: steps.check_apk.outputs.found_apk == 'true'
         env:
