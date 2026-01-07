@@ -7,7 +7,6 @@ on:
     branches:
       - main
       - master
-      - testing
   pull_request:
 
 jobs:
@@ -78,9 +77,6 @@ jobs:
     name: Create Release and Attach APK
     needs: build
     runs-on: ubuntu-latest
-    if: >
-      github.event_name == 'push' &&
-      (github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'testing')
     steps:
       - name: Download APK artifact
         uses: actions/download-artifact@v4
@@ -107,15 +103,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ github.ref_name }}"
           TAG="apk-${{ github.run_id }}"
           TITLE="Automated APK Release $TAG"
-          NOTES="Automated APK from workflow run ${{ github.run_id }} on ${BRANCH}"
+          NOTES="Automated APK from workflow run ${{ github.run_id }} on ${{ github.ref_name }}"
 
-          if [ "$BRANCH" = "testing" ]; then
-            echo "Creating prerelease for branch: $BRANCH"
-            gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --prerelease --repo "${{ github.repository }}"
-          else
-            echo "Creating full release for branch: $BRANCH"
-            gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --repo "${{ github.repository }}"
-          fi
+          # Erstelle Release und lade alle APKs hoch
+          gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --repo "${{ github.repository }}"
