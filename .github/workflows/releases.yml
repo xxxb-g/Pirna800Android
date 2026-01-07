@@ -49,6 +49,7 @@ jobs:
       - name: Setup Keystore
         run: |
           printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > /home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks
+
       - name: Verify Keystore File
         run: |
           if [ -s "/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks" ]; then
@@ -69,3 +70,44 @@ jobs:
         with:
           name: release-apk
           path: app/build/outputs/apk/release/*.apk
+
+  release:
+    name: Create Release and Attach APK
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: artifacts
+
+      - name: Check for APK files
+        id: check_apk
+        run: |
+          shopt -s nullglob
+          files=(artifacts/*.apk)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "found_apk=false" >> $GITHUB_OUTPUT
+            echo "No APK found, skipping release."
+            exit 0
+          else
+            echo "found_apk=true" >> $GITHUB_OUTPUT
+            echo "Found ${#files[@]} APK(s): ${files[*]}"
+          fi
+
+      - name: Install GitHub CLI
+        uses: cli/gh-action@v3
+
+      - name: Create release and upload APKs
+        if: steps.check_apk.outputs.found_apk == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Ein eindeutiger Tag pro Run, kann nach Wunsch angepasst werden
+          TAG="apk-${{ github.run_id }}"
+          TITLE="Automated APK Release $TAG"
+          NOTES="Automated APK from workflow run ${{ github.run_id }} on ${{ github.ref_name }}"
+
+          # Erstelle Release (inkl. Tag) und lade alle APKs hoch
+          gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --repo "${{ github.repository }}"
