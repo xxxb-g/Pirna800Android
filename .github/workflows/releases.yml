@@ -96,18 +96,23 @@ jobs:
             echo "Found ${#files[@]} APK(s): ${files[*]}"
           fi
 
-      - name: Install GitHub CLI
-        uses: cli/gh-action@v3
+      - name: Authenticate gh CLI
+        if: steps.check_apk.outputs.found_apk == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Authentifiziere gh mit dem Token aus den Secrets
+          echo "${GITHUB_TOKEN}" | gh auth login --with-token
+          gh auth status
 
       - name: Create release and upload APKs
         if: steps.check_apk.outputs.found_apk == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Ein eindeutiger Tag pro Run, kann nach Wunsch angepasst werden
           TAG="apk-${{ github.run_id }}"
           TITLE="Automated APK Release $TAG"
           NOTES="Automated APK from workflow run ${{ github.run_id }} on ${{ github.ref_name }}"
 
-          # Erstelle Release (inkl. Tag) und lade alle APKs hoch
+          # Erstelle Release und lade alle APKs hoch
           gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --repo "${{ github.repository }}"
