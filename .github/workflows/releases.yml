@@ -28,7 +28,6 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       ANDROID_KEYSTORE_PATH: keystore.jks
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,7 +75,6 @@ jobs:
       - name: Extract versionName from Gradle
         id: get_version
         run: |
-          # ruft die zuvor definierte Gradle-Task auf, gibt nur die letzte Zeile aus
           VERSION=$(./gradlew :app:printVersionName | tail -n 1)
           echo "versionName=$VERSION" >> $GITHUB_OUTPUT
           echo "Detected versionName: $VERSION"
@@ -129,8 +127,15 @@ jobs:
 
           if [ "$BRANCH" = "testing" ]; then
             echo "Creating prerelease for branch: $BRANCH"
-            gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --prerelease --repo "${{ github.repository }}"
+            gh release create "$TAG" artifacts/*.apk \
+              --title "$TITLE" \
+              --notes "$NOTES" \
+              --prerelease \
+              --repo "${{ github.repository }}"
           else
             echo "Creating full release for branch: $BRANCH"
-            gh release create "$TAG" artifacts/*.apk --title "$TITLE" --notes "$NOTES" --repo "${{ github.repository }}"
+            gh release create "$TAG" artifacts/*.apk \
+              --title "$TITLE" \
+              --notes "$NOTES" \
+              --repo "${{ github.repository }}"
           fi
