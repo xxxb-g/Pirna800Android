@@ -1,0 +1,30 @@
+default_platform(:android)
+
+platform :android do
+
+  desc "Build unsigned release APK for F-Droid"
+  lane :fdroid do
+    UI.message("Starting F-Droid compatible build…")
+
+    # F-Droid requires an unsigned reproducible build
+    gradle(
+      task: "clean assembleRelease",
+      print_command: true
+    )
+
+    # We are currently in fastlane/, so go one directory up
+    project_root = File.expand_path("..", Dir.pwd)
+
+    apk_paths = Dir["#{project_root}/app/build/outputs/apk/release/*.apk"]
+
+    if apk_paths.empty?
+      UI.user_error!("No unsigned APK found in #{project_root}/app/build/outputs/apk/release/")
+    end
+
+    UI.success("Unsigned APK(s) generated:")
+    apk_paths.each { |p| UI.message(" → #{p}") }
+
+    Actions.lane_context[:FDROID_APK_PATHS] = apk_paths
+  end
+
+end

@@ -20,11 +20,13 @@ android {
 
     signingConfigs {
         create("release") {
-            val storeFilePath = "/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks"
-            storeFile = file(storeFilePath)
-            storePassword = System.getenv("STORE_PASSWORD") ?: "defaultStorePassword"
-            keyAlias = System.getenv("KEY_ALIAS") ?: "defaultKeyAlias"
-            keyPassword = System.getenv("KEY_PASSWORD") ?: "defaultKeyPassword"
+            val storeFilePath = System.getenv("ANDROID_KEYSTORE_PATH")
+            if (storeFilePath != null) {
+                storeFile = file(storeFilePath)
+                storePassword = System.getenv("STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
         }
     }
 
@@ -35,7 +37,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+
+            // Nur in GitHub Actions signieren
+            if (System.getenv("CI") == "true") {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                // Lokal / F-Droid: unsigniert
+                signingConfig = null
+            }
         }
     }
 
@@ -52,7 +61,6 @@ android {
         compose = true
     }
 }
-
 
 dependencies {
     implementation(libs.androidx.core.ktx)
