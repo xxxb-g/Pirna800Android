@@ -75,7 +75,7 @@ jobs:
       - name: Extract versionName from Gradle
         id: get_version
         run: |
-          VERSION=$(./gradlew :app:printVersionName | tail -n 1)
+          VERSION=$(./gradlew :app:printVersionName -q)
           echo "versionName=$VERSION" >> $GITHUB_OUTPUT
           echo "Detected versionName: $VERSION"
 
