@@ -13,9 +13,18 @@ android {
         minSdk = 23
         targetSdk = 36
         versionCode = 3
-        versionName = "1.1.2"
+        versionName = "1.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    packaging {
+        jniLibs.useLegacyPackaging = true
     }
 
     signingConfigs {
