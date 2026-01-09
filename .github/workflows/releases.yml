@@ -16,6 +16,8 @@ jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
+    outputs:
+      versionName: ${{ steps.get_version.outputs.versionName }}
     env:
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -71,6 +73,14 @@ jobs:
       - name: List APK Outputs
         run: find app/build/outputs/apk -type f -name "*.apk"
 
+      - name: Extract versionName from Gradle
+        id: get_version
+        run: |
+          # ruft die zuvor definierte Gradle-Task auf, gibt nur die letzte Zeile aus
+          VERSION=$(./gradlew :app:printVersionName | tail -n 1)
+          echo "versionName=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected versionName: $VERSION"
+
       - name: Upload APK Artifact (Release)
         uses: actions/upload-artifact@v4
         with:
@@ -112,9 +122,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="${{ github.ref_name }}"
-          TAG="apk-${{ github.run_id }}"
-          TITLE="Automated APK Release $TAG"
-          NOTES="Automated APK from workflow run ${{ github.run_id }} on ${BRANCH}"
+          VERSION="${{ needs.build.outputs.versionName }}"
+          TAG="v${VERSION}"
+          TITLE="Release ${TAG}"
+          NOTES="Automated APK release for version ${TAG} from branch ${BRANCH}"
 
           if [ "$BRANCH" = "testing" ]; then
             echo "Creating prerelease for branch: $BRANCH"
