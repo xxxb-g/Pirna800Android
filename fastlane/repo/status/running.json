@@ -1,0 +1,9 @@
+{
+  "/etc/issue.net": "Debian GNU/Linux 13",
+  "commandLine": [
+    "/usr/bin/fdroid build",
+    "--all"
+  ],
+  "startTimestamp": 1767951814000,
+  "subcommand": "build"
+}
