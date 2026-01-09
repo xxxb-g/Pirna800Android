@@ -24,7 +24,8 @@ jobs:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      ANDROID_KEYSTORE_PATH: app/keystore.jks
+      ANDROID_KEYSTORE_PATH: keystore.jks
+
 
     steps:
       - name: Checkout code
