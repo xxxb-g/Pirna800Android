@@ -1,7 +1,9 @@
 name: Android Release APK Build
+
 permissions:
   contents: write
   packages: write
+
 on:
   push:
     branches:
@@ -22,6 +24,8 @@ jobs:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ANDROID_KEYSTORE_PATH: keystore.jks
+
 
     steps:
       - name: Checkout code
@@ -51,19 +55,18 @@ jobs:
 
       - name: Setup Keystore
         run: |
-          printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > /home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
 
       - name: Verify Keystore File
         run: |
-          if [ -s "/home/runner/work/Pirna800Android/Pirna800Android/app/keystore.jks" ]; then
+          if [ -s "app/keystore.jks" ]; then
             echo "Keystore file exists and is non-empty."
           else
             echo "Keystore file is missing or empty!" && exit 1
           fi
 
       - name: Build Release APK
-        run: |
-          ./gradlew clean assembleRelease
+        run: ./gradlew clean assembleRelease
 
       - name: List APK Outputs
         run: find app/build/outputs/apk -type f -name "*.apk"
@@ -81,6 +84,7 @@ jobs:
     if: >
       github.event_name == 'push' &&
       (github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'testing')
+
     steps:
       - name: Download APK artifact
         uses: actions/download-artifact@v4
