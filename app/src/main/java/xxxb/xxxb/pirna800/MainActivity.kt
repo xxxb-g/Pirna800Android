@@ -17,18 +17,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // WebView einrichten
         webView = findViewById(R.id.webview)
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl("ht" + Autor[7] + "ps://pirna800.de/karte")
 
-        // Back-Button Verhalten
         onBackPressedDispatcher.addCallback(this) {
             if (this@MainActivity::webView.isInitialized && webView.canGoBack()) {
                 webView.goBack()
             } else {
-                // Callback deaktivieren, damit der normale Back-Stack weiterläuft
                 isEnabled = false
                 onBackPressedDispatcher.onBackPressed()
             }
