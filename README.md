@@ -1,8 +1,8 @@
 # Pirna800Android
-Eine schlichte kleine App, um [Pirna800](https://pirna800.de) auf dem Handey zu nutzen. 
+Eine schlichte kleine App, um [Pirna800](https://pirna800.de) auf dem Handy zu nutzen. 
 
 ## Download
-Im Moment ist die App weder im Play Store noch bei F-Droid / IzzyOnDroid gelistet, aber es existieren Pläne dafür. 
+Im Moment ist die App weder im Play Store noch bei F-Droid gelistet, aber ich arbeitere daran.  
 Die stabile Version der App kann auf der [Release Seite](https://github.com/xxxb-g/Pirna800Android/releases/latest) heruntergeladen werden. Die Beta Versionen können bei [GH Actions](https://github.com/xxxb-g/Pirna800Android/actions/workflows/releases.yml) heruntergeladen werden. Alle APK-Dateien werden automatisch auf den Servern von Github erstellt.
 
 ### Testkonfigurationen
@@ -16,4 +16,9 @@ Diese App wurde auf unterschiedlichen Handys getestet:
 - Android 6 (emuliert)
 
 
-Wie Sie Pirna800 unterstützen können, steht auf dieser [Internetseite](https://pirna800.de/baumspenden)
+# Spenden
+
+Wie Sie Pirna800 unterstützen können, steht auf dieser [Internetseite](https://pirna800.de/baumspenden). Diese Spenden werden für das Projekt Pirna800 eingesetzt.
+
+Wollen Sie mich, den Entwickler dieser App, unterstützen, können Sie das hier tun:: https://liberapay.com/xxxb/ 
+
