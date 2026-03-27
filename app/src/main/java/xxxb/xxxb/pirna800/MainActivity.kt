@@ -6,6 +6,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : ComponentActivity() {
     val Autor = "Benedikt Goldhahn aka xxxb"
@@ -15,15 +18,19 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
-
         webView = findViewById(R.id.webview)
+        ViewCompat.setOnApplyWindowInsetsListener(webView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, systemBars.top, 0, systemBars.bottom)
+            insets
+        }
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl("ht" + Autor[7] + "ps://pirna800.de/karte")
-
         onBackPressedDispatcher.addCallback(this) {
-            if (this@MainActivity::webView.isInitialized && webView.canGoBack()) {
+            if (webView.canGoBack()) {
                 webView.goBack()
             } else {
                 isEnabled = false
@@ -31,5 +38,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 }
